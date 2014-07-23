@@ -1,0 +1,49 @@
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src = "./javascripts/chat.js"></script>
+    <script src = "./javascripts/chat_ui.js"></script>
+  <script type="text/javascript" charset="utf-8">
+  //io is global
+  </script>
+</head>
+<body>
+  <h1>Welcome to the Chatroom</h1>
+
+    <div class="messages">
+    </div>
+
+    <form>
+      <input type="text" id='chatbox'>
+      <button type='submit' id='chatButton'> Submit </button>
+    </form>
+    Current Users
+    <div class="list-of-users">
+    </div>
+  
+    
+    <script>
+      $(function() {
+        var socket = io.connect();
+        var client_chat = new Chat(socket);
+        var ui = new ChatUI(client_chat);
+        
+        socket.on('message_from_server', function(data) {
+          ui.displayMessage(data);
+        });
+        
+        socket.on('list_of_users', function(user_data) {
+          $('.list-of-users').empty();
+          user_data.users.forEach(function(user) {
+            $('.list-of-users').append('<div>' + user + '</div>');
+          });
+        });
+        
+      });
+    </script>
+</body>
+</html>
